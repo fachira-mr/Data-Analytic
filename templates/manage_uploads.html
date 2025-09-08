@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History Upload</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .dashboard-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .header-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn {
+            border-radius: 12px;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            border: none;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            border: none;
+        }
+        
+        .btn-danger:hover {
+            background: #8d0013;
+        }
+        
+        .table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .table thead th {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: none;
+            font-weight: 600;
+            color: #495057;
+            padding: 15px;
+        }
+        
+        .table tbody td {
+            padding: 12px 15px;
+            border-color: #f1f3f4;
+            vertical-align: middle;
+        }
+        
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .badge {
+            border-radius: 8px;
+            padding: 6px 12px;
+        }
+        
+        .badge-excel {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .badge-csv {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .page-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .text-muted {
+            color: #6c757d !important;
+        }
+
+        .file-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+
+        .file-excel {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .file-csv {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        @media (max-width: 768px) {
+            .header-section {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .table-responsive {
+                border-radius: 12px;
+            }
+            
+            .btn-sm {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.5rem;
+            }
+
+            .d-flex.justify-content-between {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body class="p-3 p-md-5">
+    <div class="container-fluid">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div>
+                    <p class="text-muted mb-2">Admin Panel</p>
+                    <h1 class="page-title mb-0">
+                        <i class="fas fa-history me-2 text-warning"></i>
+                        History Upload
+                    </h1>
+                </div>
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Kembali
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="dashboard-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="mb-0">
+                    <i class="fas fa-cloud-upload-alt me-2 text-primary"></i>
+                    Riwayat Upload File
+                </h5>
+                <span class="badge bg-info">{{ uploads|length }} file</span>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-hashtag me-1"></i>ID</th>
+                            <th><i class="fas fa-file me-1"></i>Nama File</th>
+                            <th><i class="fas fa-file-alt me-1"></i>Tipe File</th>
+                            <th><i class="fas fa-calendar me-1"></i>Tahun</th>
+                            <th><i class="fas fa-upload me-1"></i>Diupload</th>
+                            <th><i class="fas fa-cogs me-1"></i>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for upload in uploads %}
+                        <tr>
+                            <td><strong>{{ upload.id }}</strong></td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="file-icon {% if upload.file_type|lower == 'excel' %}file-excel{% else %}file-csv{% endif %}">
+                                        {% if upload.file_type|lower == 'excel' %}
+                                            <i class="fas fa-file-excel text-white" style="font-size: 0.9rem;"></i>
+                                        {% else %}
+                                            <i class="fas fa-file-csv text-white" style="font-size: 0.9rem;"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <strong>{{ upload.nama_file }}</strong>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge {% if upload.file_type|lower == 'excel' %}badge-excel{% else %}badge-csv{% endif %}">
+                                    {% if upload.file_type|lower == 'excel' %}
+                                        <i class="fas fa-file-excel me-1"></i>{{ upload.file_type }}
+                                    {% else %}
+                                        <i class="fas fa-file-csv me-1"></i>{{ upload.file_type }}
+                                    {% endif %}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary">
+                                    <i class="fas fa-calendar-alt me-1"></i>{{ upload.tahun }}
+                                </span>
+                            </td>
+                            <td>
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>{{ upload.uploaded_at }}
+                                </small>
+                            </td>
+                            <td>
+                                <form action="{{ url_for('delete_upload', upload_id=upload.id) }}" 
+                                      method="post" 
+                                      style="display:inline;">
+                                    <button type="submit" 
+                                            class="btn btn-sm btn-danger" 
+                                            onclick="return confirm('Yakin ingin menghapus file {{ upload.nama_file }}?')"
+                                            title="Hapus File">
+                                        <i class="fas fa-trash me-1"></i>Hapus
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            {% if not uploads %}
+            <div class="text-center py-5">
+                <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Belum ada file yang diupload</h5>
+                <p class="text-muted">Riwayat upload akan muncul di sini</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

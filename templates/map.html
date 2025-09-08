@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Peta Usulan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .map-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+        
+        .map-card:hover {
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.12);
+            transition: all 0.3s ease;
+        }
+        
+        .card-header {
+            background: #5DADE2;
+            border-radius: 16px 16px 0 0 !important;
+            padding: 25px 20px;
+            text-align: center;
+            border: none;
+        }
+        
+        .page-title {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 600;
+            font-size: 1.8rem;
+            color: white;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .btn {
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #5DADE2;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: #00538b;
+        }
+
+        .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 8px 12px;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+        }
+
+        .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-4 mb-4">
+    <div class="row justify-content-center">
+        <div class="col-md-11">
+            <!-- Map Card -->
+            <div class="card map-card">
+                <div class="card-header">
+                    <h3 class="page-title">
+                        <i class="fas fa-map-marked-alt me-2"></i>
+                        Peta Hasil Klasifikasi Usulan
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <!-- Filter Form -->
+                    <form method="get" class="mb-4">
+                        <div class="row g-3 align-items-end">
+                            <!-- Filter Kategori -->
+                            <div class="col-md-3">
+                                <label for="filter_kategori" class="form-label fw-bold">Filter Kategori</label>
+                                <select name="filter_kategori" id="filter_kategori" class="form-select">
+                                    <option value="">Semua Kategori</option>
+                                    <option value="Pemerintahan" {% if selected_kategori == 'Pemerintahan' %}selected{% endif %}>Pemerintahan</option>
+                                    <option value="Perekonomian dan Keuangan" {% if selected_kategori == 'Perekonomian dan Keuangan' %}selected{% endif %}>Perekonomian dan Keuangan</option>
+                                    <option value="Pembangunan" {% if selected_kategori == 'Pembangunan' %}selected{% endif %}>Pembangunan</option>
+                                    <option value="Kesejahteraan Rakyat" {% if selected_kategori == 'Kesejahteraan Rakyat' %}selected{% endif %}>Kesejahteraan Rakyat</option>
+                                    <option value="Lainnya" {% if selected_kategori == 'Lainnya' %}selected{% endif %}>Lainnya</option>
+                                </select>
+                            </div>
+
+                            <!-- Filter Jenis -->
+                            <div class="col-md-3">
+                                <label for="filter_jenis" class="form-label fw-bold">Filter Jenis</label>
+                                <select name="filter_jenis" id="filter_jenis" class="form-select">
+                                    <option value="">Semua Jenis</option>
+                                    <option value="Usulan Kegiatan" {% if selected_jenis == 'Usulan Kegiatan' %}selected{% endif %}>Usulan Kegiatan</option>
+                                    <option value="Saran" {% if selected_jenis == 'Saran' %}selected{% endif %}>Saran</option>
+                                    <option value="Tanggapan" {% if selected_jenis == 'Tanggapan' %}selected{% endif %}>Tanggapan</option>
+                                </select>
+                            </div>
+
+                            <!-- Tombol Filter -->
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-filter me-2"></i>Filter
+                                </button>
+                            </div>
+
+                            <!-- Tombol Reset -->
+                            <div class="col-md-2">
+                                <a href="{{ url_for('show_map') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times me-2"></i>Reset
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Legend -->
+                    <div class="mb-3 d-flex justify-content-center gap-3 flex-wrap">
+                        <div class="legend-item d-flex align-items-center gap-1">
+                            <span style="display:inline-block;width:20px;height:20px;background:red;border-radius:4px;"></span>
+                            Pemerintahan
+                        </div>
+                        <div class="legend-item d-flex align-items-center gap-1">
+                            <span style="display:inline-block;width:20px;height:20px;background:blue;border-radius:4px;"></span>
+                            Perekonomian dan Keuangan
+                        </div>
+                        <div class="legend-item d-flex align-items-center gap-1">
+                            <span style="display:inline-block;width:20px;height:20px;background:green;border-radius:4px;"></span>
+                            Pembangunan
+                        </div>
+                        <div class="legend-item d-flex align-items-center gap-1">
+                            <span style="display:inline-block;width:20px;height:20px;background:purple;border-radius:4px;"></span>
+                            Kesejahteraan Rakyat
+                        </div>
+                        <div class="legend-item d-flex align-items-center gap-1">
+                            <span style="display:inline-block;width:20px;height:20px;background:orange;border-radius:4px;"></span>
+                            Lainnya
+                        </div>
+                    </div>
+
+                    <!-- Info Filter Aktif -->
+                    {% if selected_kategori or selected_jenis %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Filter Aktif:</strong>
+                        {% if selected_kategori %}
+                            Kategori: <span class="badge bg-primary">{{ selected_kategori }}</span>
+                        {% endif %}
+                        {% if selected_jenis %}
+                            Jenis: <span class="badge bg-success">{{ selected_jenis }}</span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Map -->
+                    <div class="map-container mb-4">
+                        {{ map_html|safe }}
+                    </div>
+
+                    <!-- Button Back -->
+                    <div class="text-center">
+                        <a href="{{ url_for('predict') }}" class="btn btn-primary">
+                            <i class="fas fa-arrow-left me-2"></i>
+                            Kembali ke Prediksi
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

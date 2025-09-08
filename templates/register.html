@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regsiter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .regist-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: none;
+            max-width: 450px;
+            margin: 0 auto;
+        }
+        
+        .card-header {
+            background: #5DADE2;
+            border-radius: 16px 16px 0 0 !important;
+            padding: 30px 20px;
+            text-align: center;
+            border: none;
+        }
+        
+        .brand-title {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 600;
+            font-size: 2.2rem;
+            color: white;
+            margin: 0;
+            letter-spacing: 2px;
+        }
+        
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+            background-color: white;
+        }
+        
+        .btn-regist {
+            background: #5DADE2;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-weight: 600;
+        }
+        
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+        }
+        
+        .register-link a {
+            text-decoration: none;
+            font-weight: 600;
+            color: black;
+        }
+        
+        .register-link a:hover {
+            color: #5DADE2;
+        }
+    </style>
+</head>
+<body class="d-flex align-items-center justify-content-center">
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-sm-8">
+                <!-- Register Card -->
+                <div class="card regist-card">
+                    <!-- Header -->
+                    <div class="card-header">
+                        <h1 class="brand-title">U S U L I F Y</h1>
+                    </div>
+                    
+                    <!-- Body -->
+                    <div class="card-body p-4">
+                        <!-- Flash Messages -->
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                          {% if messages %}
+                            {% for category, message in messages %}
+                              <div class="alert alert-{{ 'danger' if category == 'error' else category }}">
+                                  {{ message }}
+                              </div>
+                            {% endfor %}
+                          {% endif %}
+                        {% endwith %}
+
+                        <!-- Register Form -->
+                        <form action="{{ url_for('register') }}" method="post">
+                        <div class="mb-3">
+                            <label for="username" class="form-label fw-semibold">Username</label>
+                            <input type="text" class="form-control" name="username" id="username"
+                                   value="{{ request.form.username if request.form.get('username') else '' }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-semibold">Email</label>
+                            <input type="email" class="form-control" name="email" id="email"
+                                   value="{{ request.form.email if request.form.get('email') else '' }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label fw-semibold">Password</label>
+                            <input type="password" class="form-control" name="password" id="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confpassword" class="form-label fw-semibold">Confirm Password</label>
+                            <input type="password" class="form-control" name="confpassword" id="confpassword" required>
+                        </div>
+                        <button type="submit" class="btn w-100 text-white" style="background-color:#5DADE2;">Register</button>
+                    </form>
+                    </div>
+                </div>
+
+                <!-- Register Link -->
+                <div class="register-link">
+                    <p class="mb-0">
+                        Sudah punya akun? 
+                        <a href="{{ url_for('login') }}">Login</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

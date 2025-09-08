@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Pengguna</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .dashboard-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .header-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn {
+            border-radius: 12px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            border: none;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            border: none;
+            color: #000;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            border: none;
+        }
+        
+        .table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .table thead th {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: none;
+            font-weight: 600;
+            color: #495057;
+            padding: 15px;
+        }
+        
+        .table tbody td {
+            padding: 12px 15px;
+            border-color: #f1f3f4;
+            vertical-align: middle;
+        }
+        
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .badge {
+            border-radius: 8px;
+            padding: 6px 12px;
+        }
+        
+        .badge-admin {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .badge-user {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .page-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .text-muted {
+            color: #6c757d !important;
+        }
+
+        @media (max-width: 768px) {
+            .header-section {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .table-responsive {
+                border-radius: 12px;
+            }
+            
+            .btn-sm {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.5rem;
+            }
+            
+            .d-flex.justify-content-between {
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: 15px;
+            }
+            
+            .d-flex.justify-content-between .btn {
+                align-self: stretch;
+            }
+        }
+    </style>
+</head>
+<body class="p-3 p-md-5">
+    <div class="container-fluid">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div>
+                    <p class="text-muted mb-2">Admin Panel</p>
+                    <h1 class="page-title mb-0">
+                        <i class="fas fa-users me-2 text-primary"></i>
+                        Kelola Pengguna
+                    </h1>
+                </div>
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Kembali
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="dashboard-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center gap-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-table me-2 text-success"></i>
+                        Daftar Pengguna
+                    </h5>
+                    <a href="{{ url_for('create_user') }}" class="btn btn-primary">
+                        <i class="fas fa-user-plus me-1"></i> Tambah Pengguna
+                    </a>
+                </div>
+                <span class="badge bg-info">{{ users|length }} pengguna</span>
+            </div>
+
+            
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-hashtag me-1"></i>ID</th>
+                            <th><i class="fas fa-user me-1"></i>Username</th>
+                            <th><i class="fas fa-envelope me-1"></i>Email</th>
+                            <th><i class="fas fa-shield-alt me-1"></i>Role</th>
+                            <th><i class="fas fa-calendar-plus me-1"></i>Dibuat</th>
+                            <th><i class="fas fa-clock me-1"></i>Last Login</th>
+                            <th><i class="fas fa-edit me-1"></i>Diupdate</th>
+                            <th><i class="fas fa-cogs me-1"></i>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td><strong>{{ user.user_id }}</strong></td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                                        <i class="fas fa-user text-white" style="font-size: 0.8rem;"></i>
+                                    </div>
+                                    <strong>{{ user.username }}</strong>
+                                </div>
+                            </td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                <span class="badge {% if user.role == 'admin' %}badge-admin{% else %}badge-user{% endif %}">
+                                    {% if user.role == 'admin' %}
+                                        <i class="fas fa-crown me-1"></i>{{ user.role|title }}
+                                    {% else %}
+                                        <i class="fas fa-user me-1"></i>{{ user.role|title }}
+                                    {% endif %}
+                                </span>
+                            </td>
+                            <td>
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar me-1"></i>{{ user.created_at }}
+                                </small>
+                            </td>
+                            <td>
+                                <small class="text-muted">
+                                    {% if user.last_login %}
+                                        <i class="fas fa-sign-in-alt me-1"></i>{{ user.last_login }}
+                                    {% else %}
+                                        <i class="fas fa-minus me-1"></i>Belum login
+                                    {% endif %}
+                                </small>
+                            </td>
+                            <td>
+                                <small class="text-muted">
+                                    <i class="fas fa-sync me-1"></i>{{ user.updated_at }}
+                                </small>
+                            </td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <a href="{{ url_for('edit_user', user_id=user.user_id) }}" 
+                                       class="btn btn-sm btn-warning" 
+                                       title="Edit Pengguna">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ url_for('delete_user', user_id=user.user_id) }}" 
+                                          method="post" 
+                                          style="display:inline;">
+                                        <button type="submit"
+                                                class="btn btn-sm btn-danger" 
+                                                onclick="return confirm('Yakin ingin menghapus pengguna {{ user.username }}?')"
+                                                title="Hapus Pengguna">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            {% if not users %}
+            <div class="text-center py-5">
+                <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Belum ada pengguna</h5>
+                <p class="text-muted">Data pengguna akan muncul di sini</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
